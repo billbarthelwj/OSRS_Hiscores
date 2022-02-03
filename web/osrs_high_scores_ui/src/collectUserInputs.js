@@ -97,7 +97,7 @@ const App = () => {
   //Should be GET
   const postToAPI = e => {
     setIsLoading(true)
-    axios.post('https://osrs-hiscores.herokuapp.com/post', {
+    axios.post('http://localhost:8080/post', {
       data : createListOfPlayerInputData()
     })
         .then((response) => {
@@ -189,17 +189,14 @@ const App = () => {
   }
 
   function sortAlphabetically(array){
-    return array.sort((a, b) => {
+    return array.sort((a,b) => {
       let fa = a.name,
           fb = b.name;
 
-      if(fa === "Overall" || fb === "Attack"){
-        return -2
-      }
-      if (fa < fb && fa !== "Overall" && fb !== "Overall") {
+      if (fa < fb) {
         return -1;
       }
-      if (fa > fb && fa !== "Overall" && fb !== "Overall") {
+      if (fa > fb) {
         return 1;
       }
       return 0;
@@ -218,10 +215,21 @@ const App = () => {
     }
   }
 
+  function showOverallFirst(sortedSkills){
+    var overall = ""
+    for(var i = 0; i < sortedSkills.length; i++){
+      if(sortedSkills[i].name === "Overall"){
+        overall = sortedSkills.splice(i, 1)
+      }
+    }
+    sortedSkills.unshift(overall[0])
+    return sortedSkills
+  }
+
   //TODO: Top half should be a form?
   return (
       <div>
-        <div>
+        <form>
           Number of Players: <input type="number" min={1} max={9} value={numberOfUsernames} onChange={handleChange}/><br/><br/>
           <div>
             {
@@ -234,13 +242,13 @@ const App = () => {
           <br/>
           <div><input type="button" value="Get Player Data" onClick={postToAPI}/> {isAPIIsBeingCalledText()} {isAPIIsBeingCalledGraphic()}</div>
           <br/>
-        </div>
+        </form>
         <div className='row'>
           <br/>
           {
             playerDataFromAPI.map(function(player)
             {
-              const playerSkills =  sortAlphabetically(Object.values(player.skills))
+              const playerSkills = showOverallFirst(sortAlphabetically(Object.values(player.skills)))
               return(
                   <table className='column'>
                     <thead>
