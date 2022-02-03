@@ -1,0 +1,44 @@
+[
+    {
+        "name": "stackofsmoat",
+        "skills": 
+        [
+            {
+                "name": "Attack",
+                "level": 2,
+                "experience": 12345
+            },
+            {
+                "name": "Strength",
+                "level": 5,
+                "experience": 54321
+            },
+            {
+                "name": "Defense",
+                "level": 1,
+                "experience": 5
+            }
+        ]
+    },
+    {
+        "name": "stackofm3n",
+        "skills": 
+        [
+            {
+                "name": "Attack",
+                "level": 2,
+                "experience": 12345
+            },
+            {
+                "name": "Strength",
+                "level": 5,
+                "experience": 54321
+            },
+            {
+                "name": "Defense",
+                "level": 1,
+                "experience": 5
+            }
+        ]
+    }
+]
