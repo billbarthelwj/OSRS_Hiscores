@@ -29,7 +29,7 @@ const App = () => {
   //in the numberOfUsernames field while the element is being focused the number decreases but also the entire screen scrolls down
   //Solution: Lock screen scroll when hovering that element while it's focused || Disable using the mouse wheel to manipulate that element's input
   const updatePlayerInputFields = e => {
-    const numberOfUsernames = e.target.value
+    const numberOfUsernames = e.target.value.slice(0,1)
     setNumberOfUsernames(numberOfUsernames)
 
     let playerList = []
