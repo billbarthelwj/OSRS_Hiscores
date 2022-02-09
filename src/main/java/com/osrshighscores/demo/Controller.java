@@ -13,8 +13,6 @@ public class Controller {
         playerHelper = new PlayerHelper();
     }
 
-    //Should be Get
-    @CrossOrigin
     @PostMapping("/post")
     public Map<String, Player> postTest(@RequestBody String dataRetrievedFromReact){
         Map<String, Player> jsonResponse = new HashMap<>();

@@ -19,11 +19,16 @@ const App = () => {
   const [playerDataFromAPI, setPlayerDataFromAPI] = useState([])
   const [numberOfUsernames, setNumberOfUsernames] = useState([2])
   const [usernameErrors, setUsernameErrors] = useState([false, false, false, false, false, false, false, false, false])
-  const errorMessage = <label style={{ color: 'red' }}>Player not found</label>
 
+  const errorMessage = <label style={{ color: 'red' }}>Player not found</label>
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleChange = e => {
+  //TODO: Fix UI bug
+  //Expected: User should be able to use the scroll wheel to adjust the number of players input when the element is focused
+  //Actual: When data has been retrieved and a scroll bar is on the screen, when you scroll down while trying to decrement the number
+  //in the numberOfUsernames field while the element is being focused the number decreases but also the entire screen scrolls down
+  //Solution: Lock screen scroll when hovering that element while it's focused || Disable using the mouse wheel to manipulate that element's input
+  const updatePlayerInputFields = e => {
     const numberOfUsernames = e.target.value
     setNumberOfUsernames(numberOfUsernames)
 
@@ -94,10 +99,11 @@ const App = () => {
     }
   }
 
-  //Should be GET
+  //Should be GET so queries can be bookmarked. No need to type in all users each time.
   const postToAPI = e => {
+    e.preventDefault();
     setIsLoading(true)
-    axios.post('http://localhost:8080/post', {
+    axios.post('https://osrs-hiscores.herokuapp.com/post', {
       data : createListOfPlayerInputData()
     })
         .then((response) => {
@@ -203,6 +209,17 @@ const App = () => {
     })
   }
 
+  function showOverallFirst(sortedSkills){
+    var overall = ""
+    for(var i = 0; i < sortedSkills.length; i++){
+      if(sortedSkills[i].name === "Overall"){
+        overall = sortedSkills.splice(i, 1)
+      }
+    }
+    sortedSkills.unshift(overall[0])
+    return sortedSkills
+  }
+
   function isAPIIsBeingCalledText(){
     if (isLoading){
       return <label>Fetching stats</label>
@@ -215,22 +232,21 @@ const App = () => {
     }
   }
 
-  function showOverallFirst(sortedSkills){
-    var overall = ""
-    for(var i = 0; i < sortedSkills.length; i++){
-      if(sortedSkills[i].name === "Overall"){
-        overall = sortedSkills.splice(i, 1)
-      }
-    }
-    sortedSkills.unshift(overall[0])
-    return sortedSkills
-  }
-
-  //TODO: Top half should be a form?
+  //TODO: Seperate the user input form and proccessed/displayed data into seperate functional components. See index.js
   return (
       <div>
         <form>
-          Number of Players: <input type="number" min={1} max={9} value={numberOfUsernames} onChange={handleChange}/><br/><br/>
+          <label>
+            Number of Players:
+            <input
+                type="number"
+                min={1}
+                max={9}
+                value={numberOfUsernames}
+                onChange={updatePlayerInputFields}
+            />
+          </label>
+          <br/><br/>
           <div>
             {
               playerInputFields.map(function(player)
@@ -240,7 +256,7 @@ const App = () => {
             }
           </div>
           <br/>
-          <div><input type="button" value="Get Player Data" onClick={postToAPI}/> {isAPIIsBeingCalledText()} {isAPIIsBeingCalledGraphic()}</div>
+          <div><button type="submit" onClick={postToAPI}>Get Player Data</button> {isAPIIsBeingCalledText()} {isAPIIsBeingCalledGraphic()}</div>
           <br/>
         </form>
         <div className='row'>

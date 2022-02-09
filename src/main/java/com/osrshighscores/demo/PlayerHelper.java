@@ -37,7 +37,7 @@ public class PlayerHelper {
             }
             in.close();
         } catch (IOException e) {
-            System.out.println("USER NOT FOUND EXCEPTION");
+            System.out.println("USER NOT FOUND EXCEPTION - " + playerName);
             isValidUsername = false;
         }
         return isValidUsername;
